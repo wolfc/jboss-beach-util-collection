@@ -21,8 +21,6 @@
  */
 package org.jboss.beach.util.collection;      
 
-import org.jboss.beach.util.collection.ChildClassAdapter;
-
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +70,10 @@ public class ChildrenList<E, P> extends AbstractList<E>
    @Override
    public boolean add(E e)
    {
+      if(e==null)
+      {
+         throw new NullPointerException("Element to be added must be specified");
+      }
       boolean success = delegate.add(e);
       if(success)
       {
