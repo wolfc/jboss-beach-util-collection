@@ -1,13 +1,14 @@
 package org.jboss.beach.util.collection.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import org.jboss.beach.util.collection.Child;
 import org.jboss.beach.util.collection.Parent;
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 /**
  * @author <a href="cdewolf@redhat.com">Carlo de Wolf</a>
@@ -74,5 +75,32 @@ public class SimpleTestCase
       }
 
       assertEquals(0, parent2.getChildren().size());
+   }
+
+   @Test
+   public void testSpoiledChild()
+   {
+      MockParent parent1 = new MockParent();
+
+      MockParent parent2 = new MockParent();
+
+      MockChild child = mock(MockChild.class);
+
+      doThrow(new IllegalArgumentException("don't like that parent")).when(child).setParent(eq(parent1));
+
+      try
+      {
+         parent1.getChildren().add(child);
+         fail("Expected IllegalArgumentException");
+      }
+      catch (IllegalArgumentException e)
+      {
+         // expected
+      }
+
+      parent2.getChildren().add(child);
+      
+      assertEquals(1, parent2.getChildren().size());
+      assertEquals(0, parent1.getChildren().size());
    }
 }
