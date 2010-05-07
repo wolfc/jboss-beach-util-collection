@@ -26,7 +26,7 @@ import org.jboss.beach.util.collection.Child;
 /**
  * @author <a href="cdewolf@redhat.com">Carlo de Wolf</a>
  */
-public class MockChild implements Child<MockParent>
+public class MockChild implements Child<MockChild, MockParent>
 {
    private MockParent parent;
    

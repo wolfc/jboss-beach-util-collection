@@ -26,7 +26,7 @@ import java.util.Collection;
 /**
  * @author <a href="cdewolf@redhat.com">Carlo de Wolf</a>
  */
-public interface Parent<C extends Child>
+public interface Parent<P extends Parent<P, C>, C extends Child<C, P>>
 {
    Collection<C> getChildren();
 }

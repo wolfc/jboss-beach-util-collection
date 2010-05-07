@@ -21,16 +21,16 @@
  */
 package org.jboss.beach.util.collection.test;
 
-import org.jboss.beach.util.collection.ChildrenList;
-import org.jboss.beach.util.collection.Parent;
-
 import java.util.Collection;
 import java.util.List;
+
+import org.jboss.beach.util.collection.ChildrenList;
+import org.jboss.beach.util.collection.Parent;
 
 /**
  * @author <a href="cdewolf@redhat.com">Carlo de Wolf</a>
  */
-public class MockParent implements Parent<MockChild>
+public class MockParent implements Parent<MockParent,MockChild>
 {
    private List<MockChild> children = new ChildrenList<MockChild, MockParent>(this);
    

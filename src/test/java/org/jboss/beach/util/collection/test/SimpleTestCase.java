@@ -1,10 +1,13 @@
 package org.jboss.beach.util.collection.test;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import org.jboss.beach.util.collection.Child;
+import org.jboss.beach.util.collection.Parent;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author <a href="cdewolf@redhat.com">Carlo de Wolf</a>
@@ -21,12 +24,31 @@ public class SimpleTestCase
          parent.getChildren().add(null);
          fail("Expected NullPointerException");
       }
-      catch(NullPointerException e)
+      catch (NullPointerException e)
       {
          // expected
       }
 
       assertEquals(0, parent.getChildren().size());
+   }
+
+   /**
+    * Ensures that adding a {@link Child} to a {@link Parent}
+    * results in {@link Child#getParent()} retaining the correct reference
+    */
+   @Test
+   public void hasParent()
+   {
+      // Create parent and child
+      final MockParent parent = new MockParent();
+      final MockChild child = new MockChild();
+
+      // Add
+      parent.getChildren().add(child);
+
+      // Assert
+      Assert.assertSame("Setting child to a parent should result in the child knowing it has a parent", child
+            .getParent(), parent);
    }
 
    @Test
@@ -46,7 +68,7 @@ public class SimpleTestCase
          parent2.getChildren().add(child);
          fail("Expected RuntimeException");
       }
-      catch(RuntimeException e)
+      catch (RuntimeException e)
       {
          // expected
       }

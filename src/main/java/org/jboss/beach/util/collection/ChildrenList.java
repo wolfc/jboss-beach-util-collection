@@ -35,15 +35,15 @@ import java.util.List;
  */
 public class ChildrenList<E, P> extends AbstractList<E>
 {
-   private static ChildClassAdapter<?, ?> defaultChildClassAdapter = new ChildClassAdapter<Child<Parent>, Parent<?>>() {
+   private static ChildClassAdapter<?, ?> defaultChildClassAdapter = new ChildClassAdapter<Child,Parent>() {
       @Override
-      public Parent<?> getParent(Child<Parent> child)
+      public Parent getParent(Child child)
       {
          return child.getParent();
       }
 
       @Override
-      public void setParent(Child<Parent> child, Parent<?> parent)
+      public void setParent(Child child, Parent parent)
       {
          child.setParent(parent);
       }
@@ -70,14 +70,27 @@ public class ChildrenList<E, P> extends AbstractList<E>
    @Override
    public boolean add(E e)
    {
+      /*
+       * Precondition checks
+       */
+      
+      // Ensure we've got a valid child
       if(e==null)
       {
          throw new NullPointerException("Element to be added must be specified");
       }
+      
+      // Check to see the child doesn't already have a parent
+      final P parent = childClassAdapter.getParent(e);
+      if(parent!=null)
+      {
+         throw new RuntimeException("Cannot add as child element " + e + " which already has parent " + parent);
+      }
+      
       boolean success = delegate.add(e);
       if(success)
       {
-         childClassAdapter.setParent(e, parent);
+         childClassAdapter.setParent(e, this.parent);
       }
       return success;
    }

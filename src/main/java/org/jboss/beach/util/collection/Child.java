@@ -24,7 +24,7 @@ package org.jboss.beach.util.collection;
 /**
  * @author <a href="cdewolf@redhat.com">Carlo de Wolf</a>
  */
-public interface Child<P extends Parent>
+public interface Child<C extends Child<C, P>, P extends Parent<P, C>>
 {
    P getParent();
 
