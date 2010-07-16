@@ -53,6 +53,37 @@ public class SimpleTestCase
    }
 
    @Test
+   public void testReadOnly()
+   {
+      MockParent parent1 = new MockParent(true);
+
+      MockParent parent2 = new MockParent(true);
+
+      MockChild child = mock(MockChild.class);
+
+      doThrow(new IllegalArgumentException("don't like that parent")).when(child).setParent(eq(parent1));
+
+      try
+      {
+         parent1.getChildren().add(child);
+         fail("Expected IllegalArgumentException");
+      }
+      catch (IllegalArgumentException e)
+      {
+         // expected
+      }
+      catch (UnsupportedOperationException e)
+      {
+         fail("add is supposed to be supported (" + e + ")");
+      }
+
+      parent2.getChildren().add(child);
+
+      assertEquals(1, parent2.getChildren().size());
+      assertEquals(0, parent1.getChildren().size());
+   }
+
+   @Test
    public void testTwoParents()
    {
       MockParent parent1 = new MockParent();

@@ -21,19 +21,46 @@
  */
 package org.jboss.beach.util.collection.test;
 
-import java.util.Collection;
-import java.util.List;
-
 import org.jboss.beach.util.collection.ChildrenList;
 import org.jboss.beach.util.collection.Parent;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author <a href="cdewolf@redhat.com">Carlo de Wolf</a>
  */
 public class MockParent implements Parent<MockParent,MockChild>
 {
-   private List<MockChild> children = new ChildrenList<MockChild, MockParent>(this);
-   
+   private List<MockChild> children;
+
+   private static class ReadOnlyList<MockChild> extends ArrayList<MockChild>
+   {
+      @Override
+      public boolean remove(Object o)
+      {
+         throw new UnsupportedOperationException("remove(" + o + ")");
+      }
+   }
+
+   public MockParent()
+   {
+      this(false);
+   }
+
+   public MockParent(boolean denyRemovals)
+   {
+      if(denyRemovals)
+      {
+         children = new ChildrenList<MockChild, MockParent>(this, new ReadOnlyList());
+      }
+      else
+      {
+         children = new ChildrenList<MockChild, MockParent>(this);
+      }
+   }
+
    @Override
    public Collection<MockChild> getChildren()
    {
