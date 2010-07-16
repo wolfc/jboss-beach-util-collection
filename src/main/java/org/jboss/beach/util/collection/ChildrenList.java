@@ -60,10 +60,20 @@ public class ChildrenList<E, P> extends AbstractList<E>
       this(parent, (ChildClassAdapter<E, P>) defaultChildClassAdapter);
    }
 
+   public ChildrenList(P parent, List<E> delegate)
+   {
+      this(parent, delegate, (ChildClassAdapter<E, P>) defaultChildClassAdapter);
+   }
+
    public ChildrenList(P parent, ChildClassAdapter<E, P> childClassAdapter)
    {
+      this(parent, new ArrayList<E>(), childClassAdapter);
+   }
+
+   public ChildrenList(P parent, List<E> delegate, ChildClassAdapter<E, P> childClassAdapter)
+   {
       this.childClassAdapter = childClassAdapter;
-      this.delegate = new ArrayList<E>();
+      this.delegate = delegate;
       this.parent = parent;
    }
 
@@ -90,7 +100,16 @@ public class ChildrenList<E, P> extends AbstractList<E>
       boolean success = delegate.add(e);
       if(success)
       {
-         childClassAdapter.setParent(e, this.parent);
+         try
+         {
+            childClassAdapter.setParent(e, this.parent);
+         }
+         catch(RuntimeException ex)
+         {
+            // oh oh
+            delegate.remove(e);
+            throw ex;
+         }
       }
       return success;
    }
